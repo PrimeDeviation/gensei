@@ -1,1 +1,34 @@
- 
+name: Deploy Gensei
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Conda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: gensei
+        environment-file: environment.yml
+        auto-activate-base: false
+
+    - name: Deploy to Staging
+      if: github.ref == 'refs/heads/staging'
+      run: |
+        conda activate gensei
+        echo "Deploying to staging server"
+        # Add commands to deploy to your staging server (e.g., using SSH)
+
+    - name: Deploy to Production
+      if: github.ref == 'refs/heads/main'
+      run: |
+        conda activate gensei
+        echo "Deploying to production server"
+        # Add commands to deploy to your production server (e.g., using SSH)

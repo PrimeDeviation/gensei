@@ -1,0 +1,16 @@
+name: gensei
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - fastapi
+  - uvicorn
+  - sqlalchemy
+  - psycopg2
+  - alembic
+  - pydantic
+  - python-dotenv
+  - pip
+  - pip:
+    - stripe

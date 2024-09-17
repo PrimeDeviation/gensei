@@ -3,11 +3,14 @@
 # Pull the latest changes
 git pull origin main
 
-# Install or update dependencies
-pip install -r requirements.txt
+# Update Conda environment
+conda env update -f environment.yml
 
-# Run database migrations (if you're using them)
-# alembic upgrade head
+# Activate Conda environment
+conda activate gensei
+
+# Run database migrations
+alembic upgrade head
 
 # Restart the application server (assuming you're using systemd)
 sudo systemctl restart gensei-production

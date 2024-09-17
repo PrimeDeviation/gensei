@@ -5,8 +5,9 @@ set -a
 source .env
 set +a
 
-# Install dependencies
-pip install -r requirements.txt
+# Create and activate Conda environment
+conda env create -f environment.yml
+conda activate gensei
 
 # Set up the database
 psql -c "CREATE DATABASE gensei_local;"
