@@ -1,17 +1,15 @@
 #!/bin/bash
 
-# Load environment variables
-set -a
-source .env
-set +a
+# Activate the Conda environment
+source activate gensei
 
-# Create and activate Conda environment
-conda env create -f environment.yml
-conda activate gensei
+# Set the environment (local or production)
+export ENVIRONMENT=local
 
-# Set up the database
-psql -c "CREATE DATABASE gensei_local;"
+# Run database migrations
 alembic upgrade head
 
-# Start the development server
-uvicorn backend.main:app --reload
+# Seed initial data (if any)
+# python backend/seed_data.py  # Commented out since the file does not exist
+
+echo "Local setup completed."
