@@ -4,6 +4,11 @@ Gensei is a GenAI learning platform that allows users to create, manage, and int
 
 ## Project Structure
 
+The project is structured as follows:
+- Frontend: Svelte with SvelteKit
+- Backend: FastAPI
+- Database: PostgreSQL (managed through SQLAlchemy)
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -45,92 +50,56 @@ Gensei is a GenAI learning platform that allows users to create, manage, and int
    uvicorn backend.main:app --reload
    ```
 
-2. Start the Node.js frontend server:
+2. For development, start the Vite dev server:
    ```sh
+   npm run dev
+   ```
+
+3. For production, build the Svelte app and start the server:
+   ```sh
+   npm run build
    npm start
    ```
 
-3. Open your browser and go to `http://localhost:3000` to view the application.
+4. Open your browser and go to `http://localhost:3000` to view the application.
 
 ## Features
 
-### User Profile
-
-- **User Profile Management**: Users can view and update their profile information, including email, active status, and password.
-
-### AI Models
-
-- **Model Management**: Users can create, view, and manage their AI models, such as GPT-3 or BERT.
-
-### Agents
-
-- **Agent Management**: Users can create and manage agents that interact with the AI models.
-
-### Tools
-
-- **Tool Management**: Users can add and configure various tools to enhance their AI models and agents.
-
-### Projects
-
-- **Project Management**: Users can create and manage projects that utilize AI models and agents.
-
-### Dojo
-
-- **Dojo**: Users can design and manage dojo environments for training and testing AI models.
+- User Profile Management
+- AI Model Management
+- Agent Management
+- Tool Management
+- Project Management
+- Dojo Environment for Training and Testing AI Models
 
 ## API Endpoints
 
-### User Profile
+The FastAPI backend provides the following endpoints:
 
-- **Get User Profile**: `GET /api/userprofile/{user_id}`
-- **Update User Profile**: `PUT /api/userprofile/{user_id}`
+- User Profile: `/api/userprofile/{user_id}`
+- AI Models: `/api/genai_models/`
+- Agents: `/api/agents/`
+- Tools: `/api/tools/`
+- Projects: `/api/projects/`
+- Dojo: `/api/dojo/`
 
-### AI Models
-
-- **Create AI Model**: `POST /api/genai_models/`
-- **Get AI Model**: `GET /api/genai_models/{genai_model_id}`
-
-### Agents
-
-- **Get Agents**: `GET /api/agents/`
-
-### Tools
-
-- **Get Tools**: `GET /api/tools/`
-
-### Projects
-
-- **Get Projects**: `GET /api/projects/`
-
-### Dojo
-
-- **Get Dojo**: `GET /api/dojo/`
+For detailed API documentation, run the backend server and visit `/docs`.
 
 ## Frontend Components
 
-### UserProfile
+The Svelte frontend is organized into the following main components:
 
-- **UserProfile Tab**: Handles all user-related data, allowing users to view and update their profile information.
+- Layout (`src/routes/+layout.svelte`): Main layout component
+- TabNavigation (`src/lib/components/TabNavigation.svelte`): Navigation tabs
+- ChatBar (`src/lib/components/ChatBar.svelte`): Chat interface
+- Route Components:
+  - Models (`src/routes/models/+page.svelte`)
+  - Agents (`src/routes/agents/+page.svelte`)
+  - Tools (`src/routes/tools/+page.svelte`)
+  - Projects (`src/routes/projects/+page.svelte`)
+  - Dojo (`src/routes/dojo/+page.svelte`)
 
-### Models
-
-- **Models Tab**: Allows users to create, view, and manage their AI models.
-
-### Agents
-
-- **Agents Tab**: Allows users to create and manage agents that interact with the AI models.
-
-### Tools
-
-- **Tools Tab**: Allows users to add and configure various tools to enhance their AI models and agents.
-
-### Projects
-
-- **Projects Tab**: Allows users to create and manage projects that utilize AI models and agents.
-
-### Dojo
-
-- **Dojo Tab**: Allows users to design and manage dojo environments for training and testing AI models.
+State management is handled using Svelte stores (`src/lib/stores/`).
 
 ## Contributing
 
