@@ -5,9 +5,14 @@ from .routers import items, agents, tools, dojo, projects, userprofile, aimodels
 from .config import Settings
 from .db import get_db
 from sqlalchemy.orm import Session
+from . import models
+from .database import engine
+from .oauth import router as oauth_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -28,6 +33,7 @@ app.include_router(tools.router)
 app.include_router(dojo.router)
 app.include_router(projects.router)
 app.include_router(aimodels.router)
+app.include_router(oauth_router, prefix="/oauth", tags=["oauth"])
 
 @app.get("/api/health")
 async def health_check(db: Session = Depends(get_db)):

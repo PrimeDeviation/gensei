@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+/* Remove or comment out if found */
+/*
 @font-face {
   font-family: 'Virgil';
-  src: url('/static/fonts/Virgil.woff2') format('woff2');
+  src: url('/fonts/Virgil.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
 }
+*/
 
 :root {
   --background-color: #ffffff;

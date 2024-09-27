@@ -49,6 +49,7 @@
   <button class="dark-mode-toggle" on:click={toggleDarkMode}>
     {isDarkMode ? '☼' : '☾'}
   </button>
+  <a href="/settings" class="settings-gear">⚙️</a>
 </div>
 
 <style>
@@ -128,5 +129,22 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+  }
+
+  .settings-gear {
+    position: fixed;
+    top: 70px;  /* Adjust this value to position it below the projects tab */
+    right: 20px;
+    font-size: 24px;
+    text-decoration: none;
+    color: var(--text-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  .settings-gear:hover {
+    opacity: 0.8;
   }
 </style>

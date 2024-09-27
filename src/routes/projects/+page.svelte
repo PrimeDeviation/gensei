@@ -1,10 +1,16 @@
 <script>
-  // Add any necessary imports
+  // Add any necessary imports and logic here
 </script>
 
-<h2>Projects</h2>
-<p>This is the content for the Projects tab.</p>
+<div class="container">
+  <h1>Projects</h1>
+  <p>This is a placeholder for the Projects page. Implement your projects functionality here.</p>
+</div>
 
 <style>
-  /* Add any necessary styles */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 20px;
+  }
 </style>
