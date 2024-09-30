@@ -70,7 +70,7 @@ Gensei is a powerful AI orchestration platform that allows users to create, mana
 
 4. Create a `.env` file in the root directory and add necessary environment variables:
    ```
-   DATABASE_URL=postgresql://username:password@localhost:5432/gensei
+   DATABASE_URL=postgresql://username:password@localhost:5433/gensei
    JWT_SECRET=your_jwt_secret
    GOOGLE_CLIENT_ID=your_google_client_id
    GOOGLE_CLIENT_SECRET=your_google_client_secret
@@ -100,42 +100,15 @@ Gensei is a powerful AI orchestration platform that allows users to create, mana
 
 3. Open your browser and navigate to `http://localhost:5173`
 
-## Development
-
-- Backend API documentation is available at `http://localhost:8000/docs`
-- For frontend development, refer to the Svelte and SvelteKit documentation
-
-## Testing
-
-- Run backend tests:
-  ```
-  cd backend
-  pytest
-  ```
-
-- Run frontend tests:
-  ```
-  cd frontend
-  npm run test
-  ```
 
 ## Deployment
 
-1. Build the frontend:
+1. Build the dev server
    ```
    cd frontend
-   npm run build
+   npm run dev
    ```
-
-2. Use Docker to containerize the application:
-   ```
-   docker-compose up --build
-   ```
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License 

@@ -1,50 +1,30 @@
 import os
-from sqlalchemy import create_engine, exc
+import logging
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy_utils import database_exists, create_database
-from psycopg2 import connect
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from pydantic_settings import BaseSettings
 
-# Assuming DATABASE_URL is in the format: postgresql://username:password@host:port/dbname
-DATABASE_URL = os.getenv("DATABASE_URL")
-db_parts = DATABASE_URL.split("/")
-db_name = "genseilocaldb"
-db_user = "primed"
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
-# Reconstruct the URL with the correct database name
-DATABASE_URL = "/".join(db_parts[:-1] + [db_name])
+class Settings(BaseSettings):
+    DATABASE_URL: str
+    STRIPE_SECRET_KEY: str
+    JWT_SECRET: str
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GITHUB_CLIENT_ID: str
+    GITHUB_CLIENT_SECRET: str
 
-def init_db():
-    global engine, SessionLocal, Base
+    class Config:
+        env_file = ".env"
 
-    try:
-        # Check if the database exists
-        if not database_exists(DATABASE_URL):
-            # Connect to PostgreSQL server
-            postgres_url = "/".join(db_parts[:-1] + ["postgres"])
-            conn = connect(postgres_url)
-            conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-            cursor = conn.cursor()
-            
-            # Create the database
-            cursor.execute(f"CREATE DATABASE {db_name} OWNER {db_user}")
-            
-            cursor.close()
-            conn.close()
-            
-            print(f"Database '{db_name}' created successfully.")
-        
-        # Create the main engine
-        engine = create_engine(DATABASE_URL)
-        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-        Base = declarative_base()
-        
-        print("Database connection established successfully.")
-    except exc.SQLAlchemyError as e:
-        print(f"An error occurred while setting up the database: {e}")
-        raise
+settings = Settings()
+logger.debug(f"DATABASE_URL: {settings.DATABASE_URL}")
 
-init_db()
+engine = create_engine(settings.DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 
 def get_db():
     db = SessionLocal()

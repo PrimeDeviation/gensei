@@ -1,21 +1,88 @@
 <script>
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { discoveryRequest, processDiscoveryResponse, generateRandomCodeVerifier, calculatePKCECodeChallenge } from 'oauth4webapi';
 
   let user = {
     name: 'John Doe',
     email: 'john@example.com',
     googleConnected: false,
     githubConnected: false,
-    // Add other user properties as needed
   };
 
-  let darkMode = false; // Assume we have a global dark mode setting
+  let darkMode = false;
 
   onMount(async () => {
-    // Fetch user data from your API
-    // This is a placeholder - replace with actual API call
-    // user = await fetchUserData();
+    console.log('Google Client ID:', import.meta.env.VITE_GOOGLE_CLIENT_ID);
+    console.log('GitHub Client ID:', import.meta.env.VITE_GITHUB_CLIENT_ID);
+    
+    // Check if we have just completed authentication
+    const authToken = localStorage.getItem('auth_token');
+    if (authToken) {
+      // Fetch user data using the token
+      try {
+        const response = await fetch('/api/user', {
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          user = {
+            ...user,
+            ...userData,
+            googleConnected: userData.oauth_provider === 'google',
+            githubConnected: userData.oauth_provider === 'github'
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    }
   });
+
+  async function connectWithProvider(provider) {
+    console.log('Connecting with provider:', provider);
+    
+    try {
+      const clientId = provider === 'google' ? import.meta.env.VITE_GOOGLE_CLIENT_ID : import.meta.env.VITE_GITHUB_CLIENT_ID;
+      console.log(`Using client ID for ${provider}:`, clientId);
+
+      if (!clientId) {
+        throw new Error(`Client ID for ${provider} is not defined`);
+      }
+
+      let authorizationEndpoint;
+
+      if (provider === 'google') {
+        const issuer = new URL('https://accounts.google.com');
+        const as = await discoveryRequest(issuer).then(response => processDiscoveryResponse(issuer, response));
+        authorizationEndpoint = as.authorization_endpoint;
+      } else {
+        authorizationEndpoint = 'https://github.com/login/oauth/authorize';
+      }
+
+      const code_verifier = generateRandomCodeVerifier();
+      const code_challenge = await calculatePKCECodeChallenge(code_verifier);
+      const code_challenge_method = 'S256';
+
+      const authorizationUrl = new URL(authorizationEndpoint);
+      authorizationUrl.searchParams.set('client_id', clientId);
+      authorizationUrl.searchParams.set('code_challenge', code_challenge);
+      authorizationUrl.searchParams.set('code_challenge_method', code_challenge_method);
+      authorizationUrl.searchParams.set('redirect_uri', `${window.location.origin}/auth/${provider}/callback`);
+      authorizationUrl.searchParams.set('response_type', 'code');
+      authorizationUrl.searchParams.set('scope', provider === 'google' ? 'openid email profile' : 'user:email');
+
+      console.log('Authorization URL:', authorizationUrl.toString());
+
+      sessionStorage.setItem(`${provider}_code_verifier`, code_verifier);
+
+      window.location.assign(authorizationUrl);
+    } catch (error) {
+      console.error('Error in connectWithProvider:', error);
+    }
+  }
 
   function saveSettings() {
     // Implement save functionality
@@ -25,6 +92,7 @@
   function connectGoogle() {
     // Implement Google OAuth connection
     console.log('Connecting to Google');
+    connectWithProvider('google');
   }
 
   function disconnectGoogle() {
@@ -36,6 +104,7 @@
   function connectGithub() {
     // Implement GitHub OAuth connection
     console.log('Connecting to GitHub');
+    connectWithProvider('github');
   }
 
   function disconnectGithub() {
@@ -49,9 +118,7 @@
     // Implement dark mode toggle functionality
     console.log('Dark mode:', darkMode);
   }
-</script>
-
-<div class="container">
+</script><div class="container">
   <h1>User Settings</h1>
   
   <section>
@@ -75,13 +142,13 @@
       {#if user.googleConnected}
         <button on:click={disconnectGoogle} class="disconnect">Disconnect Google</button>
       {:else}
-        <button on:click={connectGoogle}>Connect Google</button>
+        <button on:click={connectGoogle}>Connect with Google</button>
       {/if}
 
       {#if user.githubConnected}
         <button on:click={disconnectGithub} class="disconnect">Disconnect GitHub</button>
       {:else}
-        <button on:click={connectGithub}>Connect GitHub</button>
+        <button on:click={connectGithub}>Connect with GitHub</button>
       {/if}
     </div>
   </section>
@@ -157,3 +224,4 @@
     background-color: #cc0000;
   }
 </style>
+

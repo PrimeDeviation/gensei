@@ -1,13 +1,18 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from .db import Base
 
 class User(Base):
     __tablename__ = 'users'  # Name of the table in the database
     id = Column(Integer, primary_key=True, index=True)  # Primary key column
     email = Column(String, unique=True, index=True)  # Unique email column
+    name = Column(String)  # Name column
+    oauth_provider = Column(String)  # OAuth provider column
     hashed_password = Column(String)  # Password column
     is_active = Column(Boolean, default=True)  # Active status column
+    created_at = Column(DateTime(timezone=True), server_default=func.now())  # Created at column
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())  # Updated at column
 
     items = relationship("Item", back_populates="owner")  # Relationship to the Item table
     genai_models = relationship("GenAIModel", back_populates="owner")  # Relationship to the GenAIModel table

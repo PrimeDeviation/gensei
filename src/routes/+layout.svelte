@@ -3,6 +3,8 @@
   import ChatBar from '$lib/components/ChatBar.svelte';
   import TabNavigation from '$lib/components/TabNavigation.svelte';
   import { onMount } from 'svelte';
+  import { setContext } from 'svelte';
+  import { page } from '$app/stores';
 
   let isDarkMode = false;
   let chatWidth = 20;
@@ -33,6 +35,8 @@
     window.removeEventListener('mousemove', resize);
     window.removeEventListener('mouseup', stopResize);
   }
+
+  $: setContext('env', $page.data.env);
 </script>
 
 <div id="app" class:dark-mode={isDarkMode} style="--chat-width: {chatWidth}%;">

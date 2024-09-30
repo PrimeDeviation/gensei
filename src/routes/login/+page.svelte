@@ -9,15 +9,35 @@
       response_type=code&
       state=state_parameter_passthrough_value&
       redirect_uri=${encodeURIComponent('http://localhost:5173/auth/google/callback')}&
-      client_id=YOUR_GOOGLE_CLIENT_ID`;
+      client_id=${import.meta.env.VITE_GOOGLE_CLIENT_ID}`;
   }
 
   function loginWithGithub() {
     window.location.href = `https://github.com/login/oauth/authorize?
-      client_id=YOUR_GITHUB_CLIENT_ID&
+      client_id=${import.meta.env.VITE_GITHUB_CLIENT_ID}&
       redirect_uri=${encodeURIComponent('http://localhost:5173/auth/github/callback')}`;
   }
 </script>
 
-<button on:click={loginWithGoogle}>Login with Google</button>
-<button on:click={loginWithGithub}>Login with GitHub</button>
+<div class="login-container">
+  <h1>Login</h1>
+  <button on:click={loginWithGoogle}>Login with Google</button>
+  <button on:click={loginWithGithub}>Login with GitHub</button>
+</div>
+
+<style>
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>

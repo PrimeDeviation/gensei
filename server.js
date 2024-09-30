@@ -14,6 +14,10 @@ app.use('/api', createProxyMiddleware({
   changeOrigin: true 
 }));
 
+// Add these routes before the SvelteKit handler
+app.use('/auth/google/callback', createProxyMiddleware({ target: 'http://localhost:5173', changeOrigin: true }));
+app.use('/auth/github/callback', createProxyMiddleware({ target: 'http://localhost:5173', changeOrigin: true }));
+
 // Use SvelteKit's handler
 app.use(handler);
 

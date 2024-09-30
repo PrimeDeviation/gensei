@@ -1,4 +1,4 @@
-const BASE_URL = '/api'; // Adjust this if your FastAPI has a different base URL
+const BASE_URL = 'http://localhost:3000/api'; // Update this line
 
 export async function fetchModels() {
   const response = await fetch(`${BASE_URL}/models`);
